@@ -23,7 +23,7 @@ collection = db["users"]
 # 🔥 GEMINI AI SETUP (NEW SDK)
 # =========================
 
-GEMINI_API_KEY = "AIzaSyD1BxeOrH-gNR4geEh9CDezv-YUwfUz5YY"   # 👈 PUT YOUR KEY HERE
+GEMINI_API_KEY = "AIzaSyBRA0XETlvUM5wPa_PjA315si7dFKOI-TQ"   # 👈 PUT YOUR KEY HERE
 
 client_ai = genai.Client(api_key=GEMINI_API_KEY)
 
