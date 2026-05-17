@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Resume Builder</title>
+</head>
+<div class="blob1"></div>
+<div class="blob2"></div>
+<div class="blob3"></div>
+<div class="blob4"></div>
+<div class="blob5"></div>
+<div class="blob6"></div>
+<div class="blob7"></div>
+<div class="blob8"></div>
+<body>
+<body>
+
+<!-- PREMIUM INTRO -->
+
+<div id="intro">
+
+    <div class="gradient gradient1"></div>
+    <div class="gradient gradient2"></div>
+
+    <div class="particles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="intro-wrapper">
+
+        <!-- FLOATING ELEMENTS -->
+
+        <div class="floating-tag tag1">
+            Build Resume
+        </div>
+
+        <div class="floating-tag tag2">
+            Interview Ready
+        </div>
+
+        <div class="floating-tag tag3">
+            Smart Analysis
+        </div>
+
+        <!-- MAIN CARD -->
+
+        <div class="resume-ui">
+
+            <div class="resume-header"></div>
+
+            <div class="resume-body">
+
+                <div class="line long"></div>
+                <div class="line medium"></div>
+                <div class="line short"></div>
+
+                <div class="resume-circle"></div>
+
+            </div>
+
+        </div>
+
+        <!-- TEXT -->
+
+        <h1 class="intro-heading">
+            SMART RESUME BUILDER
+        </h1>
+
+        <p class="intro-sub">
+            Build - Analyze - Interview prep
+        </p>
+
+        <!-- LOADER -->
+
+        <div class="loader">
+            <div class="loader-fill"></div>
+        </div>
+
+    </div>
+
+</div>
+<!-- YOUR EXISTING WEBSITE -->
+
+<div class="sidebar">    
+       <div class="header">
+          <div class="iconplc">
+          <img class="icon" src="{{ url_for('static', filename='images/icon.png') }}">
+          </div>
+          <h1>
+            Smart <span class="span">Resume</span> Builder
+          </h1>
+             
+          <div class="headbtns">     
+          <button class="loginbtn hbtn1" onclick="dashboardPage()" style="font-weight: bold;color: black;">Dashboard</button>
+          <button class="loginbtn hbtn1" onclick="Login()" style="font-weight: bold;color: black;">Login</button>
+          </div>
+        </div>
+<div class="f1"><h1>📝</h1>
+ <div class="popup1">
+        Create professional resumes
+ </div>
+</div>
+<div class="f2"><h1>📊</h1>
+    <div class="popup2">
+        Analyze your resume
+    </div>
+</div>
+<div class="f3 box1"><h1>✍️</h1>
+    <div class="popup3">
+        Prepare for interviews
+    </div>
+</div>
+<div class="caption">
+        <h1>Build.Analyze <span class="span1">Resumes</span>
+        <br>And Crack Interviews</h1>
+        <div> 
+            <button onclick="generatorPage()" class="loginbtn hbtn1" style="width: 200px;-webkit-text-stroke:0px black;font-weight: bold;color: black;">Generate Resume</button>
+            <button onclick="scrollFeatures()" class="loginbtn hbtn1" style="-webkit-text-stroke:0px black;font-weight: bold;color: black;">Explore</button>
+            
+        </div>
+</div>
+
+<h1 id="features" style="text-align: center;
+    color: white;
+    font-size: 100px;
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    ">Features</h1>
+<div class="features">
+    <div class="gen">
+        <h1>📝Resume Generator</h1>
+        <h2 style="padding: 10px;">Create ATS-friendly 😎 resumes by simply entering your details.</h2>
+        <button onclick="openGenerator()" class="loginbtn dbtn" style="width: 200px;-webkit-text-stroke:0px black;font-weight: bold;color: black; width: 300px;margin: 10px;">Generate Resume</button>
+    </div>
+    <div class="analyze">
+        <h1>📊Resume Analyzer</h1>
+        <h2 style="padding: 10px;">Analyze your resume and get smart suggestions to improve your ATS score.</h2>
+        <button onclick="analyzerPage()" class="loginbtn dbtn" style="width: 200px;-webkit-text-stroke:0px black;font-weight: bold;color: black; width: 300px;margin: 10px;">Analyze Resume</button>
+        </div>
+    <div class="interview">
+        <h1>✍️Interview Prep</h1>
+        <h2 style="padding: 10px;">Prepare for interviews with AI-generated questions based on your resume.</h2>
+        <button onclick="interviewPage()" class="loginbtn dbtn" style="width: 200px;-webkit-text-stroke:0px black;font-weight: bold;color: black;width: 300px;margin: 10px;">Interview Prep</button>
+   </div>
+</div>    
+<footer style="color: white;text-align: center;margin-top: 190px;">
+
+    © 2026 Smart Resume Builder
+
+</footer>
+</body>
+<style>
+/* PREMIUM INTRO */
+
+#intro{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+
+    background:
+    radial-gradient(circle at top left,#1e293b,#020617 75%);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    z-index:999999;
+
+    animation:introFade 0.8s ease forwards;
+    animation-delay:3s;
+}
+
+/* GRADIENT GLOWS */
+
+.gradient{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(140px);
+    opacity:0.45;
+}
+
+.gradient1{
+    width:420px;
+    height:420px;
+
+    background:#fbbf24;
+
+    top:-120px;
+    left:-120px;
+
+    animation:glowMove1 6s infinite alternate;
+}
+
+.gradient2{
+    width:420px;
+    height:420px;
+
+    background:#2563eb;
+
+    bottom:-120px;
+    right:-120px;
+
+    animation:glowMove2 6s infinite alternate;
+}
+
+/* CENTER */
+
+.intro-wrapper{
+    position:relative;
+
+    width:100%;
+    max-width:700px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    z-index:10;
+}
+
+/* RESUME */
+
+.resume-ui{
+    width:190px;
+    height:240px;
+
+    background:
+    linear-gradient(145deg,#ffffff,#f3f4f6);
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    position:relative;
+
+    box-shadow:
+    0 0 40px rgba(251,191,36,0.35),
+    0 0 100px rgba(251,191,36,0.12);
+
+    animation:floatResume 3s ease-in-out infinite;
+}
+
+.resume-header{
+    height:50px;
+
+    background:
+    linear-gradient(90deg,#fbbf24,#f59e0b);
+}
+
+.resume-body{
+    padding:24px;
+}
+
+.line{
+    height:10px;
+
+    border-radius:30px;
+
+    background:#d1d5db;
+
+    margin-bottom:16px;
+
+    animation:pulseLine 1.5s infinite;
+}
+
+.long{
+    width:100%;
+}
+
+.medium{
+    width:75%;
+}
+
+.short{
+    width:50%;
+}
+
+.resume-circle{
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    background:#e5e7eb;
+
+    margin:30px auto 0;
+
+    animation:circlePulse 2s infinite;
+}
+
+/* FLOATING TAGS */
+
+.floating-tag{
+    position:absolute;
+
+    padding:12px 20px;
+
+    border-radius:50px;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    color:white;
+
+    font-size:15px;
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    box-shadow:
+    0 0 25px rgba(255,255,255,0.06);
+
+    opacity:0;
+}
+
+.tag1{
+    top:20px;
+    left:60px;
+
+    animation:tagPop1 1s forwards;
+    animation-delay:0.4s;
+}
+
+.tag2{
+    top:90px;
+    right:40px;
+
+    animation:tagPop2 1s forwards;
+    animation-delay:0.8s;
+}
+
+.tag3{
+    top:-100px;
+    left:400px;
+
+    animation:tagPop3 1s forwards;
+    animation-delay:1.2s;
+}
+
+/* TEXT */
+
+.intro-heading{
+    margin-top:40px;
+
+    color:white;
+
+    font-size:42px;
+    font-weight:900;
+
+    letter-spacing:3px;
+
+    animation:textReveal 1s ease;
+
+    text-shadow:
+    0 0 25px rgba(251,191,36,0.5);
+}
+
+.intro-sub{
+    margin-top:12px;
+
+    color:#d1d5db;
+
+    font-size:17px;
+
+    letter-spacing:2px;
+
+    animation:subReveal 1.3s ease;
+}
+
+/* LOADER */
+
+.loader{
+    width:260px;
+    height:7px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:30px;
+}
+
+.loader-fill{
+    width:0;
+    height:100%;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(90deg,#fbbf24,#fde68a);
+
+    box-shadow:
+    0 0 20px rgba(251,191,36,0.8);
+
+    animation:loaderMove 2.2s forwards;
+}
+
+/* PARTICLES */
+
+.particles span{
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:#fbbf24;
+
+    box-shadow:
+    0 0 20px #fbbf24;
+}
+
+.particles span:nth-child(1){
+    top:85%;
+    left:10%;
+    animation:particleMove 8s infinite linear;
+}
+
+.particles span:nth-child(2){
+    top:95%;
+    left:30%;
+    animation:particleMove 10s infinite linear;
+}
+
+.particles span:nth-child(3){
+    top:90%;
+    right:20%;
+    animation:particleMove 9s infinite linear;
+}
+
+.particles span:nth-child(4){
+    top:100%;
+    right:10%;
+    animation:particleMove 11s infinite linear;
+}
+
+.particles span:nth-child(5){
+    top:92%;
+    left:50%;
+    animation:particleMove 7s infinite linear;
+}
+
+/* ANIMATIONS */
+
+@keyframes loaderMove{
+
+    from{
+        width:0;
+    }
+
+    to{
+        width:100%;
+    }
+}
+
+@keyframes floatResume{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-14px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+@keyframes pulseLine{
+
+    0%{
+        opacity:0.5;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0.5;
+    }
+}
+
+@keyframes circlePulse{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.08);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+}
+
+@keyframes tagPop1{
+
+    from{
+        opacity:0;
+        transform:translateY(60px) scale(0.5);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+@keyframes tagPop2{
+
+    from{
+        opacity:0;
+        transform:translateY(60px) scale(0.5);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+@keyframes tagPop3{
+
+    from{
+        opacity:0;
+        transform:translateY(60px) scale(0.5);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+@keyframes textReveal{
+
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes subReveal{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes glowMove1{
+
+    from{
+        transform:translate(0,0);
+    }
+
+    to{
+        transform:translate(60px,40px);
+    }
+}
+
+@keyframes glowMove2{
+
+    from{
+        transform:translate(0,0);
+    }
+
+    to{
+        transform:translate(-60px,-40px);
+    }
+}
+
+@keyframes particleMove{
+
+    from{
+        transform:translateY(0);
+        opacity:0;
+    }
+
+    20%{
+        opacity:1;
+    }
+
+    to{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
+
+@keyframes introFade{
+
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}  
+body{
+    overflow-x: hidden;
+    /*background-color: #0e0e0e;*/
+    background-image: url("{{ url_for('static', filename='images/bg.png') }}"),
+    url("{{ url_for('static', filename='images/wholebg.png') }}");
+    background-repeat: no-repeat,no-repeat;
+    background-position: top center,center;
+    background-size: 350px,cover;
+    z-index: -1;
+    min-height: 200vh;
+}
+.header{
+    display: flex;
+    gap: 10px;
+    text-align: left;
+    color: rgb(255, 253, 253);
+    font-size: 20px;
+    margin-left: 20px;
+}
+.span{
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    text-shadow: 0 0 15px rgba(36,254,65,0.5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 40px;
+}
+.span1{
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    text-shadow: 0 0 15px rgba(36,254,65,0.5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 160px;
+}
+.caption{    
+    -webkit-text-stroke: 2px rgba(36,254,65,0.5);
+    color: white;
+    margin-top: 180px;
+    text-align: center;
+    font-size: 50px;
+    padding: 0px;
+}
+.f1{
+    top:145px;
+    left: 760px;
+    position: absolute;   
+    animation:float 3s ease-in-out infinite;
+    cursor: pointer;
+}
+.popup1{
+    position:absolute;
+    top:20px;
+    left: -280px;
+    width:220px;
+    padding:15px;
+    border-radius:20px;
+    background: #ff4d8e;
+    color:white;
+    font-size:18px;
+    visibility:hidden;
+}
+.f1:hover .popup1{
+    opacity:1;
+    visibility:visible;   
+}
+.f2{
+    top:230px;
+    left: 810px;
+    position: absolute;   
+    animation:float 3s ease-in-out infinite;
+    cursor: pointer;
+}    
+.popup2{
+    position:absolute;
+    top:20px;
+    left: 70px;
+    width:170px;
+    padding:15px;
+    border-radius:20px;
+    background: rgb(10, 2, 249);
+    color:white;
+    font-size:18px;
+    visibility:hidden;
+}
+.f2:hover .popup2{
+    opacity:1;
+    visibility:visible;  
+}
+.f3{
+    top:100px;
+    left: 860px;
+    position: absolute;   
+    animation:float 3s ease-in-out infinite;
+    cursor: pointer;
+}
+.popup3{
+    position:absolute;
+    top:20px;
+    left: 70px;
+    width:170px;
+    padding:15px;
+    border-radius:20px;
+    background: #800ae7;
+    color:white;
+    font-size:18px;
+    visibility:hidden;
+}
+.f3:hover .popup3{
+    opacity:1;
+    visibility:visible;
+}
+@keyframes float {
+    0%{transform: translateY(0px)}
+    50%{transform: translateY(-10px)}
+    100%{transform: translateY(0px)}
+} 
+.icon{
+    height: 100px;
+    width: 100px;
+    animation:float 3s ease-in-out infinite;
+
+    filter:
+    drop-shadow(0 0 10px rgba(36,254,65,0.7))
+    drop-shadow(0 0 20px rgba(36,254,65,0.5))
+    drop-shadow(0 0 40px rgba(36,254,65,0.4));
+}
+.iconplc{
+    margin-top: 1px;
+    margin-left: 5px;
+}
+.headbtns{
+    margin-left: 750px;
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+.hbtn1{
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    box-shadow: 0 0 15px rgba(36,254,65,0.5);
+}
+.dbtn{
+    background:linear-gradient(45deg,#833ab4,#fd1d1d,#fcb045);
+}
+.hbtn1:hover{
+    transform: translateY(-10px);
+}
+.dbtn:hover{
+    transform: translateY(-10px);
+}
+
+.loginbtn{
+    background-color: rgb(244, 25, 87);
+    color: rgb(255, 254, 254);
+    width: 100px;
+    height: 50px;
+    border-radius: 20px;
+}
+.capbtn{
+    background-color: rgb(244, 25, 87);
+    color: rgb(255, 254, 254);
+    width: 100px;
+    height: 50px;
+    border-radius: 20px;
+}
+.blob1{
+    background-color: #ff4d8e;
+    border-radius: 50%;
+    top:145px;
+    left: 740px;
+    filter: blur(15px);
+    height: 80px;
+    width: 80px;
+    position: absolute;
+}
+.blob2{
+    background-color: #4f46e5;
+    border-radius: 50%;
+    left:790px;
+    top: 230px;
+    filter: blur(15px);
+    height: 80px;
+    width: 80px;
+    position: absolute;
+}
+.blob3{
+    background-color: #a855f7;
+    border-radius: 50%;
+    left: 840px;
+    top: 105px;
+    filter: blur(15px);
+    height: 80px;
+    width: 80px;
+    z-index: -1;
+    position: absolute;
+}
+.features{
+    margin-top: 100px;
+    display: flex;
+    gap: 100px;
+    margin-left: 100px;
+    margin-right: 100px;
+    justify-content: center;
+}
+.gen{
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    padding: 10px;
+    width: 320px;
+    height: 320px;
+    border-radius: 20px;
+    animation:float 3s ease-in-out infinite;
+}
+.analyze{
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    padding: 10px;
+    width: 320px;
+    height: 320px;
+    border-radius: 20px;
+    animation:float 3s ease-in-out infinite;
+}
+.interview{
+    background:linear-gradient(45deg,#24fe41,#fdfc47);
+    padding: 10px;
+    width: 320px;
+    height: 320px;
+    border-radius: 20px;
+    animation:float 3s ease-in-out infinite;
+}
+/*
+.blob4{
+    background-color: rgb(200, 4, 62);
+    border-radius: 50%;
+    bottom: -15px;
+    right: -15px;
+    filter: blur(100px);
+    height: 450px;
+    width: 550px;
+    z-index: -1;
+    position: fixed;
+}
+.blob5{
+    background-color: rgb(244, 229, 19);
+    border-radius: 50%;
+    bottom: -80px;
+    left: 500px;
+    filter: blur(100px);
+    height: 450px;
+    width: 550px;
+    z-index: -1;
+    position: fixed;
+}
+.blob6{
+    background-color: rgb(6, 239, 18);
+    border-radius: 50%;
+    top: -15px;
+    right: 550px;
+    filter: blur(100px);
+    height: 450px;
+    width: 550px;
+    z-index: -1;
+    position: fixed;
+}
+.blob7{
+    background-color: rgb(11, 238, 246);
+    border-radius: 50%;
+    top: 300px;
+    left: 300px;
+    filter: blur(100px);
+    height: 250px;
+    width: 250px;
+    z-index: -1;
+    position: fixed;
+}
+.blob8{
+    background-color: rgb(245, 64, 64);
+    border-radius: 50%;
+    top: 200px;
+    left: 750px;
+    filter: blur(100px);
+    height: 450px;
+    width: 550px;
+    z-index: -1;
+    position: fixed;
+}*/
+</style>
+<script>
+function Login(){
+    window.location.href="/loginpage";
+}
+
+function dashboardPage(){
+    window.location.href="/dashboard";
+}
+
+function generatorPage(){
+    window.location.href="/generatorpage";
+}
+
+function analyzerPage(){
+    window.location.href="/analyzerpage";
+}
+
+function interviewPage(){
+    window.location.href="/interviewpage";
+}
+
+function scrollFeatures(){
+    document.getElementById("features").scrollIntoView({
+        behavior:"smooth"
+    });
+}
+setTimeout(()=>{
+
+    document.getElementById("intro").remove();
+
+},5000);
+
+async function openGenerator(){
+
+    const email =
+    localStorage.getItem("email");
+
+    // NOT LOGGED IN
+
+    if(!email){
+
+        alert("Please Login First");
+
+        window.location.href = "/loginpage";
+
+        return;
+    }
+
+    // CHECK DATABASE
+
+    const response = await fetch(
+
+        "http://127.0.0.1:5000/check_user",
+
+        {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                email:email
+
+            })
+
+        }
+    );
+
+    const data = await response.json();
+
+    // USER EXISTS
+
+    if(data.exists){
+
+        window.location.href = "/generatorpage";
+    }
+
+    // USER REMOVED FROM DATABASE
+
+    else{
+
+        localStorage.removeItem("email");
+
+        alert("Please Login Again");
+
+        window.location.href = "/loginpage";
+    }
+}
+</script>
+</html>

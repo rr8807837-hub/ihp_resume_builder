@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Resume Builder Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+    width:100%;
+    padding:18px 30px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    background:#111827;
+
+    border-bottom:1px solid #1f2937;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+    color:#fbbf24;
+}
+
+.nav-links{
+    display:flex;
+    gap:15px;
+}
+
+.nav-links button{
+    padding:10px 18px;
+
+    border:none;
+    border-radius:10px;
+
+    background:#1f2937;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.nav-links button:hover{
+    background:#fbbf24;
+    color:black;
+}
+
+/* HERO */
+
+.hero{
+    text-align:center;
+
+    padding:70px 20px;
+}
+
+.hero h1{
+    font-size:55px;
+    font-weight:700;
+}
+
+.hero p{
+    margin-top:20px;
+
+    color:#cbd5e1;
+
+    font-size:18px;
+
+    max-width:700px;
+
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.hero button{
+    margin-top:30px;
+
+    padding:15px 30px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#fbbf24;
+
+    color:black;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.hero button:hover{
+    transform:translateY(-3px);
+}
+
+/* COUNTERS */
+
+.counter-section{
+    padding:20px 30px 50px;
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.counter-card{
+    background:#111827;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    border:1px solid #1f2937;
+
+    text-align:center;
+
+    transition:0.3s;
+}
+
+.counter-card:hover{
+    transform:translateY(-5px);
+}
+
+.counter-icon{
+    font-size:45px;
+}
+
+.counter-number{
+    margin-top:15px;
+
+    font-size:38px;
+    font-weight:bold;
+
+    color:#fbbf24;
+}
+
+.counter-title{
+    margin-top:10px;
+
+    color:#cbd5e1;
+}
+
+/* FEATURES */
+
+.features{
+    padding:20px 30px 60px;
+}
+
+.section-title{
+    text-align:center;
+
+    font-size:42px;
+
+    margin-bottom:40px;
+}
+
+.feature-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:25px;
+}
+
+.feature-card{
+    background:#111827;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    border:1px solid #1f2937;
+
+    transition:0.3s;
+}
+
+.feature-card:hover{
+    transform:translateY(-5px);
+}
+
+.feature-icon{
+    font-size:55px;
+}
+
+.feature-card h2{
+    margin-top:20px;
+
+    font-size:26px;
+}
+
+.feature-card p{
+    margin-top:15px;
+
+    color:#cbd5e1;
+
+    line-height:1.7;
+}
+
+.feature-card button{
+    margin-top:25px;
+
+    padding:12px 20px;
+
+    border:none;
+    border-radius:10px;
+
+    background:#fbbf24;
+
+    color:black;
+
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+/* LIVE ACTIVITY */
+
+.live{
+    padding:20px 30px 60px;
+}
+
+.activity-box{
+    max-width:900px;
+
+    margin:auto;
+
+    background:#111827;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    border:1px solid #1f2937;
+}
+
+.activity-item{
+    padding:15px;
+
+    margin-bottom:12px;
+
+    border-radius:12px;
+
+    background:#1f2937;
+
+    display:flex;
+    justify-content:space-between;
+
+    color:#e5e7eb;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+
+    padding:30px;
+
+    color:#94a3b8;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .hero h1{
+        font-size:40px;
+    }
+
+    .section-title{
+        font-size:32px;
+    }
+
+    .nav-links{
+        display:none;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+    <div class="logo">
+        Smart Resume Builder
+    </div>
+
+    <div class="nav-links">
+
+        <button onclick="goGenerator()">
+            Generator
+        </button>
+
+        <button onclick="goAnalyzer()">
+            Analyzer
+        </button>
+
+        <button onclick="goInterview()">
+            Interview Prep
+        </button>
+
+    </div>
+
+</div>
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <h1>
+        Build Professional Resumes Easily
+    </h1>
+
+    <p>
+        Create resumes, analyze your skills using AI, and prepare for interviews with Smart Resume Builder.
+    </p>
+
+    <button onclick="goGenerator()">
+        Start Building
+    </button>
+
+</section>
+
+<!-- COUNTERS -->
+
+<section class="counter-section">
+
+    <div class="counter-card">
+
+        <div class="counter-icon">📄</div>
+
+        <div class="counter-number" id="resumeCount">
+            0
+        </div>
+
+        <div class="counter-title">
+            Resumes Created
+        </div>
+
+    </div>
+
+    <div class="counter-card">
+
+        <div class="counter-icon">🤖</div>
+
+        <div class="counter-number" id="analysisCount">
+            0
+        </div>
+
+        <div class="counter-title">
+            AI Analyses
+        </div>
+
+    </div>
+
+    <div class="counter-card">
+
+        <div class="counter-icon">🎯</div>
+
+        <div class="counter-number" id="interviewCount">
+            0
+        </div>
+
+        <div class="counter-title">
+            Interview Sessions
+        </div>
+
+    </div>
+
+    <div class="counter-card">
+
+        <div class="counter-icon">👨‍💻</div>
+
+        <div class="counter-number" id="userCount">
+            0
+        </div>
+
+        <div class="counter-title">
+            Active Users
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FEATURES -->
+
+<section class="features">
+
+    <h1 class="section-title">
+        Features
+    </h1>
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📝
+            </div>
+
+            <h2>
+                Resume Generator
+            </h2>
+
+            <p>
+                Create modern and ATS-friendly resumes easily using different templates.
+            </p>
+
+            <button onclick="goGenerator()">
+                Open
+            </button>
+
+        </div>
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h2>
+                Resume Analyzer
+            </h2>
+
+            <p>
+                Upload your PDF resume and get AI-powered suggestions and analysis.
+            </p>
+
+            <button onclick="goAnalyzer()">
+                Analyze
+            </button>
+
+        </div>
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎤
+            </div>
+
+            <h2>
+                Interview Prep
+            </h2>
+
+            <p>
+                Practice interview questions and improve your confidence for placements.
+            </p>
+
+            <button onclick="goInterview()">
+                Practice
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- LIVE ACTIVITY -->
+
+<section class="live">
+
+    <h1 class="section-title">
+        Live Activity
+    </h1>
+
+    <div class="activity-box" id="activityBox">
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<div class="footer">
+    © 2026 Smart Resume Builder
+</div>
+
+<script>
+
+/* COUNTER ANIMATION */
+
+function animateCounter(id,target,speed){
+
+    let count = 0;
+
+    const element = document.getElementById(id);
+
+    const interval = setInterval(()=>{
+
+        count += Math.ceil(target/100);
+
+        if(count >= target){
+
+            count = target;
+
+            clearInterval(interval);
+        }
+
+        element.innerText = count;
+
+    },speed);
+}
+
+animateCounter("resumeCount",1250,20);
+animateCounter("analysisCount",860,20);
+animateCounter("interviewCount",420,20);
+animateCounter("userCount",2100,20);
+
+/* LIVE ACTIVITY */
+
+const activities = [
+
+    "Rahul created a Frontend Resume",
+    "Sneha analyzed her resume",
+    "Arjun started interview prep",
+    "Sai created an AI Engineer Resume",
+    "Kiran improved resume score",
+    "Priya uploaded a resume PDF"
+];
+
+function addActivity(){
+
+    const box = document.getElementById("activityBox");
+
+    const item = document.createElement("div");
+
+    item.className = "activity-item";
+
+    item.innerHTML = `
+    
+    <span>
+        ${activities[Math.floor(Math.random()*activities.length)]}
+    </span>
+
+    <span>
+        ${Math.floor(Math.random()*10)+1}s ago
+    </span>
+    
+    `;
+
+    box.prepend(item);
+
+    if(box.children.length > 5){
+
+        box.removeChild(box.lastChild);
+    }
+}
+
+for(let i=0;i<4;i++){
+    addActivity();
+}
+
+setInterval(addActivity,3000);
+
+/* ROUTES */
+
+function goGenerator(){
+
+    window.location.href = "/generator";
+}
+
+function goAnalyzer(){
+
+    window.location.href = "/analyzer";
+}
+
+function goInterview(){
+
+    window.location.href = "/interviewprep";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Resume Analyzer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+
+<body style="color:white;font-family:Arial;text-align:center;padding:20px;">
+<div id="miniIntro">
+
+    <div class="emoji-container">
+
+        <div class="emoji main-emoji">
+            📄
+        </div>
+
+        <div class="emoji floating e1">📊</div>
+        <div class="emoji floating e2">🤖</div>
+        <div class="emoji floating e3">⚡</div>
+
+    </div>
+
+    <div class="mini-loader">
+        <div class="mini-loader-fill"></div>
+    </div>
+
+</div>
+<h1>🧠 AI Resume Analyzer</h1>
+<div style="
+position: fixed;
+top: 30px;
+right: 40px;
+z-index: 9999;
+">
+
+    <button 
+    style="
+    height: 45px;
+    width: 100px;
+    padding: 0 25px;
+    background: linear-gradient(45deg,#24fe41,#fdfc47);
+    border: black 2px solid;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(36,254,65,0.5);"
+    onclick="goHome()">
+
+    HOME
+
+    </button>
+
+</div>
+<div style="display: flex; flex-direction: row; justify-content: center; gap: 20px;">
+<input type="file" id="file" accept="application/pdf">
+<br><br>
+<button onclick="analyze()">Analyze with AI</button>
+</div>
+<p style="margin-right: 250px;">Supported file formats: .pdf</p>
+<div id="output" style="text-align:center;
+background:#1e293b;
+padding:20px;margin-top:20px;
+border-radius:10px;
+ border: #efdf05 2px solid; 
+ width: 1000px;
+ margin: auto;">
+    Upload your Resume pdf for Analysis.....</div>
+<style>
+
+body{
+    background-image: url("{{ url_for('static', filename='images/wholebg.png') }}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 120vh;
+}    
+    /* FILE INPUT */
+
+#file{
+    width:400px;
+    padding:14px;
+    border:2px dashed #fbbf24;
+    border-radius:18px;
+    background:rgba(255,255,255,0.06);
+    color:white;
+    cursor:pointer;
+    backdrop-filter:blur(10px);
+    transition:0.3s;
+    font-size:15px;
+    box-shadow:
+    0 0 20px rgba(251,191,36,0.08);
+}
+
+#file:hover{
+    background:rgba(255,255,255,0.1);
+    transform:translateY(-2px);
+    box-shadow:0 0 25px rgba(251,191,36,0.2);
+}
+
+/* FILE BUTTON */
+
+#file::file-selector-button{
+    width: 100px;
+    padding:5px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(45deg,#fbbf24,#f59e0b);
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    margin-right:15px;
+    transition:0.3s;
+}
+
+#file::file-selector-button:hover{
+
+    transform:scale(1.05);
+}
+
+/* ANALYZE BUTTON */
+
+button{
+    width:200px;
+    padding:14px;
+    border:none;
+    border-radius:18px;
+    background:
+    linear-gradient(45deg,#24fe41,#00c9ff);
+    color:black;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 0 25px rgba(36,254,65,0.25);
+}
+
+button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 0 35px rgba(36,254,65,0.45);
+}
+/* MINI INTRO */
+
+#miniIntro{
+    position:fixed;
+    inset:0;
+
+    background:#020617;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    z-index:999999;
+
+    overflow:hidden;
+
+    animation:introFade 0.6s ease forwards;
+    animation-delay:2.5s;
+}
+
+.emoji-container{
+    position:relative;
+
+    width:220px;
+    height:220px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.main-emoji{
+    font-size:85px;
+
+    z-index:5;
+
+    animation:mainFloat 2s ease-in-out infinite;
+
+    filter:
+    drop-shadow(0 0 20px rgba(251,191,36,0.7));
+}
+
+.floating{
+    position:absolute;
+
+    font-size:42px;
+
+    opacity:0;
+
+    animation-duration:1.2s;
+    animation-fill-mode:forwards;
+}
+
+/* FLOATING POSITIONS */
+
+.e1{
+    top:10px;
+    left:10px;
+
+    animation-name:pop1;
+    animation-delay:0.3s;
+}
+
+.e2{
+    top:20px;
+    right:0;
+
+    animation-name:pop2;
+    animation-delay:0.7s;
+}
+
+.e3{
+    bottom:10px;
+    left:30px;
+
+    animation-name:pop3;
+    animation-delay:1s;
+}
+
+/* LOADER */
+
+.mini-loader{
+    width:180px;
+    height:6px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:30px;
+}
+
+.mini-loader-fill{
+    width:0;
+    height:100%;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(90deg,#fbbf24,#fde68a);
+
+    box-shadow:
+    0 0 20px rgba(251,191,36,0.8);
+
+    animation:loaderFill 2s forwards;
+}
+
+/* ANIMATIONS */
+
+@keyframes loaderFill{
+
+    to{
+        width:100%;
+    }
+}
+
+@keyframes mainFloat{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+@keyframes pop1{
+
+    0%{
+        opacity:0;
+        transform:translate(40px,40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes pop2{
+
+    0%{
+        opacity:0;
+        transform:translate(-40px,40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes pop3{
+
+    0%{
+        opacity:0;
+        transform:translate(40px,-40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes introFade{
+
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}
+</style>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+async function extractText(file){
+
+    // convert PDF page → image → OCR text
+    const data = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data }).promise;
+
+    let fullText = "";
+
+    for(let i = 1; i <= pdf.numPages; i++){
+
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 2 });
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({
+            canvasContext: ctx,
+            viewport: viewport
+        }).promise;
+
+        // OCR ON IMAGE
+        const result = await Tesseract.recognize(
+            canvas,
+            "eng"
+        );
+
+        fullText += result.data.text + "\n";
+    }
+
+    return fullText.trim();
+}
+
+async function analyze(){
+    let file = document.getElementById("file").files[0];
+    if(!file){
+        alert("Upload PDF first");
+        return;
+    }
+    alert("🤖 Please wait around 10-15 seconds while our AI analyzes your resume PDF...");
+
+    let text = await extractText(file);
+
+    // 🔥 DEBUG STEP (VERY IMPORTANT)
+    console.log("EXTRACTED TEXT:", text);
+
+    if(!text || text.length < 10){
+        alert("❌ Could not extract text from PDF. Try another file.");
+        return;
+    }
+
+    let res = await fetch("/analyze_resume", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text })
+    });
+
+    let data = await res.json();
+
+    document.getElementById("output").innerHTML = `
+<h2>📊 ATS Score: ${data.ats_score}</h2>
+
+<p><b>📌 Summary:</b> ${data.summary}</p>
+
+<p><b>💼 Job Fit:</b> ${data.job_fit}</p>
+
+<p><b>⚡ Skills:</b> ${data.skills.join(", ")}</p>
+
+<p><b>💪 Strengths:</b><br>
+${data.strengths.map(s => "• " + s).join("<br>")}
+</p>
+
+<p><b>❌ Weaknesses:</b><br>
+${data.weaknesses.map(w => "• " + w).join("<br>")}
+</p>
+
+<p><b>🚀 Improvements:</b><br>
+${data.improvements.map(i => "• " + i).join("<br>")}
+</p>
+`;
+}
+function goHome(){
+
+    window.location.href = "/";
+}
+setTimeout(()=>{
+
+    document.getElementById("miniIntro").remove();
+
+},3000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Interview Generator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+
+body{
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding:20px;
+    background-image: url("{{ url_for('static', filename='images/wholebg.png') }}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 120vh;
+}
+
+button{
+    padding:15px 20px;
+    /*margin-top:20px;*/
+    background:#38bdf8;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+#output{
+    background:#1e293b;
+    padding:20px;
+    margin-top:30px;
+    border-radius:10px;
+    text-align:left;
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+li{
+    margin:12px 0;
+    line-height:1.5;
+}
+/* MINI INTRO */
+
+#miniIntro{
+    position:fixed;
+    inset:0;
+
+    background:#020617;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    z-index:999999;
+
+    overflow:hidden;
+
+    animation:introFade 0.6s ease forwards;
+    animation-delay:2.5s;
+}
+
+.emoji-container{
+    position:relative;
+
+    width:220px;
+    height:220px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.main-emoji{
+    font-size:85px;
+
+    z-index:5;
+
+    animation:mainFloat 2s ease-in-out infinite;
+
+    filter:
+    drop-shadow(0 0 20px rgba(251,191,36,0.7));
+}
+
+.floating{
+    position:absolute;
+
+    font-size:42px;
+
+    opacity:0;
+
+    animation-duration:1.2s;
+    animation-fill-mode:forwards;
+}
+
+/* FLOATING POSITIONS */
+
+.e1{
+    top:10px;
+    left:10px;
+
+    animation-name:pop1;
+    animation-delay:0.3s;
+}
+
+.e2{
+    top:20px;
+    right:0;
+
+    animation-name:pop2;
+    animation-delay:0.7s;
+}
+
+.e3{
+    bottom:10px;
+    left:30px;
+
+    animation-name:pop3;
+    animation-delay:1s;
+}
+
+/* LOADER */
+
+.mini-loader{
+    width:180px;
+    height:6px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:30px;
+}
+
+.mini-loader-fill{
+    width:0;
+    height:100%;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(90deg,#fbbf24,#fde68a);
+
+    box-shadow:
+    0 0 20px rgba(251,191,36,0.8);
+
+    animation:loaderFill 2s forwards;
+}
+
+/* ANIMATIONS */
+
+@keyframes loaderFill{
+
+    to{
+        width:100%;
+    }
+}
+
+@keyframes mainFloat{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+@keyframes pop1{
+
+    0%{
+        opacity:0;
+        transform:translate(40px,40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes pop2{
+
+    0%{
+        opacity:0;
+        transform:translate(-40px,40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes pop3{
+
+    0%{
+        opacity:0;
+        transform:translate(40px,-40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes introFade{
+
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}
+#file{
+    width:400px;
+    padding:10px;
+    border:2px dashed rgba(251,191,36,0.6);
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    backdrop-filter:blur(12px);
+    transition:0.3s;
+    box-shadow:
+0 0 20px rgba(251,191,36,0.08);
+}
+
+#file:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#fbbf24;
+
+    background:rgba(255,255,255,0.08);
+
+    box-shadow:
+    0 0 30px rgba(251,191,36,0.25);
+}
+
+/* CHOOSE FILE BUTTON */
+
+#file::file-selector-button{
+    width: 100px;
+    padding:10px;
+    border:none;
+    border-radius:14px;
+    margin-right:15px;
+    background:
+    linear-gradient(45deg,#fbbf24,#f59e0b);
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:
+    0 0 15px rgba(251,191,36,0.4);
+}
+
+#file::file-selector-button:hover{
+
+    transform:scale(1.05);
+
+    box-shadow:
+    0 0 25px rgba(251,191,36,0.7);
+}
+</style>
+</head>
+
+<body>
+<div id="miniIntro">
+
+    <div class="emoji-container">
+
+        <div class="emoji main-emoji">
+            📄
+        </div>
+
+        <div class="emoji floating e1">🎯</div>
+        <div class="emoji floating e2">💼</div>
+        <div class="emoji floating e3">🔥</div>
+
+    </div>
+
+    <div class="mini-loader">
+        <div class="mini-loader-fill"></div>
+    </div>
+
+</div>
+<h1>🧠 AI Interview Question Generator</h1>
+</div>
+ <div style="
+position: fixed;
+top: 20px;
+right: 50px;
+z-index: 9999;
+">
+
+    <button 
+    style="
+    height: 45px;
+    padding: 0 25px;
+    background: linear-gradient(45deg,#24fe41,#fdfc47);
+    border: black 2px solid;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(36,254,65,0.5);
+    "
+    onclick="goHome()">
+
+    HOME
+
+    </button>
+
+</div>
+<div style="display: flex;flex-direction: row;justify-content: center; gap: 20px;">
+<input type="file" id="file" accept="application/pdf">
+<br>
+<button onclick="generateQuestions()">
+Generate Questions
+</button>
+</div>
+<p style="margin-right: 250px;">Supported file formats: .pdf</p>
+
+<div id="output" style="border: #f59e0b 2px solid;">
+Upload resume PDF to generate questions...
+</div>
+
+<script>
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+
+// ==========================
+// EXTRACT TEXT FROM PDF
+// ==========================
+
+async function extractTextFromPDF(file){
+
+    const data = await file.arrayBuffer();
+
+    const pdf = await pdfjsLib.getDocument({ data }).promise;
+
+    let text = "";
+
+    for(let i = 1; i <= pdf.numPages; i++){
+
+        const page = await pdf.getPage(i);
+
+        const textContent = await page.getTextContent();
+
+        const pageText = textContent.items
+            .map(item => item.str)
+            .join(" ");
+
+        text += pageText + " ";
+    }
+
+    // NORMAL PDF TEXT FOUND
+    if(text.trim().length > 20){
+        return text;
+    }
+
+    // OCR FALLBACK
+    alert("Scanned PDF detected. OCR running...");
+
+    const page = await pdf.getPage(1);
+
+    const viewport = page.getViewport({ scale: 2 });
+
+    const canvas = document.createElement("canvas");
+
+    const context = canvas.getContext("2d");
+
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    await page.render({
+        canvasContext: context,
+        viewport: viewport
+    }).promise;
+
+    const imageData = canvas.toDataURL("image/png");
+
+    const result = await Tesseract.recognize(
+        imageData,
+        "eng"
+    );
+
+    return result.data.text;
+}
+
+
+// ==========================
+// MAIN FUNCTION
+// ==========================
+
+async function generateQuestions(){
+
+    try{
+
+        const file = document.getElementById("file").files[0];
+
+        if(!file){
+            alert("Upload PDF first");
+            return;
+        }
+
+        document.getElementById("output").innerHTML =
+        "⏳ Reading Resume...";
+
+        // EXTRACT TEXT
+        const text = await extractTextFromPDF(file);
+
+        console.log("EXTRACTED TEXT:");
+        console.log(text);
+
+        if(!text || text.trim().length < 3){
+
+            document.getElementById("output").innerHTML =
+            "❌ Could not extract text from PDF";
+
+            return;
+        }
+
+        document.getElementById("output").innerHTML =
+        "🤖 Generating Questions...";
+
+        // SEND TO BACKEND
+        const response = await fetch("/generate_interview_questions", {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body: JSON.stringify({
+                text:text
+            })
+
+        });
+
+        console.log("FETCH RESPONSE:", response);
+
+        const data = await response.json();
+
+        console.log("BACKEND DATA:");
+        console.log(data);
+
+        if(data.error){
+
+            document.getElementById("output").innerHTML =
+            `❌ ${data.error}<br><br>${data.details || ""}`;
+
+            return;
+        }
+
+        // SHOW QUESTIONS
+        let html = `
+            <h2>🧠 Interview Questions</h2>
+            <ol>
+        `;
+
+        data.questions.forEach(q => {
+            html += `<li>${q}</li>`;
+        });
+
+        html += "</ol>";
+
+        document.getElementById("output").innerHTML = html;
+
+    }
+
+    catch(err){
+
+        console.log("FULL ERROR:");
+        console.log(err);
+
+        document.getElementById("output").innerHTML =
+        `❌ ${err}`;
+
+    }
+}
+setTimeout(()=>{
+
+    document.getElementById("miniIntro").remove();
+
+},3000);
+function goHome(){
+
+    window.location.href = "/";
+}
+</script>
+
+</body>
+</html>

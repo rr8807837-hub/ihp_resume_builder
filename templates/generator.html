@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Simple Resume Generator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+body{
+    background:#111827;
+    background-image: url("{{ url_for('static', filename='images/wholebg.png') }}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    color:white;
+    display:flex;
+    height:100vh;
+}
+
+/* LEFT */
+
+.sidebar{
+    width:350px;
+    background:#1f2937;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.sidebar h2{
+    margin-bottom:20px;
+    color:#fbbf24;
+}
+
+.input-group{
+    margin-bottom:15px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#374151;
+    color:white;
+}
+
+textarea{
+    resize:vertical;
+    min-height:80px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
+    font-weight:bold;
+}
+
+.generate-btn{
+    background:#fbbf24;
+    color:black;
+}
+
+.download-btn{
+    background:#2563eb;
+    color:white;
+}
+
+/* CHIPS */
+
+.chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:8px;
+}
+
+.chip{
+    background:#374151;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.chip.selected{
+    background:#fbbf24;
+    color:black;
+}
+
+/* RIGHT */
+
+.preview{
+    flex:1;
+    padding:30px;
+    overflow-y:auto;
+    background:#e5e7eb;
+}
+
+/* RESUME */
+
+#resume{
+    max-width:800px;
+    margin:auto;
+    background:white;
+    color:black;
+    padding:40px;
+    border-radius:10px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.header h1{
+    font-size:34px;
+}
+
+.section{
+    margin-top:25px;
+}
+
+.section h2{
+    border-bottom:2px solid #fbbf24;
+    padding-bottom:5px;
+    margin-bottom:10px;
+}
+
+.skills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.skill{
+    background:#f3f4f6;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+}
+/* PAGE INTRO */
+
+/* MINI INTRO */
+
+#miniIntro{
+    position:fixed;
+    inset:0;
+
+    background:#020617;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    z-index:999999;
+
+    overflow:hidden;
+
+    animation:introFade 0.6s ease forwards;
+    animation-delay:2.5s;
+}
+
+.emoji-container{
+    position:relative;
+
+    width:220px;
+    height:220px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.main-emoji{
+    font-size:85px;
+
+    z-index:5;
+
+    animation:mainFloat 2s ease-in-out infinite;
+
+    filter:
+    drop-shadow(0 0 20px rgba(251,191,36,0.7));
+}
+
+.floating{
+    position:absolute;
+
+    font-size:42px;
+
+    opacity:0;
+
+    animation-duration:1.2s;
+    animation-fill-mode:forwards;
+}
+
+/* FLOATING POSITIONS */
+
+.e1{
+    top:10px;
+    left:10px;
+
+    animation-name:pop1;
+    animation-delay:0.3s;
+}
+
+.e2{
+    top:20px;
+    right:0;
+
+    animation-name:pop2;
+    animation-delay:0.7s;
+}
+
+.e3{
+    bottom:10px;
+    left:20px;
+
+    animation-name:pop3;
+    animation-delay:1s;
+}
+
+/* LOADER */
+
+.mini-loader{
+    width:180px;
+    height:6px;
+
+    background:rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin-top:30px;
+}
+
+.mini-loader-fill{
+    width:0;
+    height:100%;
+
+    border-radius:30px;
+
+    background:
+    linear-gradient(90deg,#fbbf24,#fde68a);
+
+    box-shadow:
+    0 0 20px rgba(251,191,36,0.8);
+
+    animation:loaderFill 2s forwards;
+}
+
+/* ANIMATIONS */
+
+@keyframes loaderFill{
+
+    to{
+        width:100%;
+    }
+}
+
+@keyframes mainFloat{
+
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+@keyframes pop1{
+
+    0%{
+        opacity:0;
+        transform:translate(40px,40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes pop2{
+
+    0%{
+        opacity:0;
+        transform:translate(-40px,40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes pop3{
+
+    0%{
+        opacity:0;
+        transform:translate(40px,-40px) scale(0.2);
+    }
+
+    100%{
+        opacity:1;
+        transform:translate(0,0) scale(1);
+    }
+}
+
+@keyframes introFade{
+
+    to{
+        opacity:0;
+        visibility:hidden;
+    }
+}
+</style>
+</head>
+<body>
+    <div id="miniIntro">
+
+    <div class="emoji-container">
+
+        <div class="emoji main-emoji">
+            📄
+        </div>
+
+        <div class="emoji floating e1">✨</div>
+        <div class="emoji floating e2">📝</div>
+        <div class="emoji floating e3">🚀</div>
+
+    </div>
+
+    <div class="mini-loader">
+        <div class="mini-loader-fill"></div>
+    </div>
+
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>Resume Generator</h2>
+
+<!-- PERSONAL -->
+<h1>Personal Info</h1>
+<div class="input-group">
+<label>Full Name</label>
+<input type="text" id="name">
+</div>
+
+<div class="input-group">
+<label>Email</label>
+<input type="email" id="email">
+</div>
+
+<div class="input-group">
+<label>Phone</label>
+<input type="text" id="phone">
+</div>
+
+<div class="input-group">
+<label>Location</label>
+<input type="text" id="location">
+</div>
+
+<div class="input-group">
+<label>LinkedIn</label>
+<input type="text" id="linkedin">
+</div>
+
+<div class="input-group">
+<label>GitHub</label>
+<input type="text" id="github">
+</div>
+
+<div class="input-group">
+<label>Gender</label>
+<select id="gender">
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="input-group">
+<label>Job Role</label>
+<input type="text" id="role">
+</div>
+
+<div class="input-group">
+<label>Professional Summary</label>
+<textarea id="summary" placeholder="Tell about yourself breifly"></textarea>
+</div>
+
+<!-- EDUCATION -->
+
+<div class="input-group">
+<h1>Education</h1>    
+<label>Highest Qualification</label>
+<input type="text" id="degree">
+</div>
+
+<div class="input-group">
+<label>College /University Name</label>
+<input type="text" id="college">
+</div>
+
+<div class="input-group">
+<label>Branch/Stream Name</label>
+<input type="text" id="branch" >
+</div>
+
+<div class="input-group">
+<label>Graduation Year</label>
+<input type="text" id="gradyear" placeholder="Eg:2024-2027">
+</div>
+
+<div class="input-group">
+<label>CGPA / Percentage</label>
+<input type="text" id="cgpa">
+</div>
+
+<div class="input-group">
+<label>12th School/College Name</label>
+<input type="text" id="school12">
+</div>
+
+<div class="input-group">
+<label>Stream and Percentage</label>
+<input type="text" id="marks12" placeholder="Eg: MPC / BiPC / CEC">
+</div>
+
+<div class="input-group">
+<label>10th School Name</label>
+<input type="text" id="school10">
+</div>
+
+<div class="input-group">
+<label>10th Marks</label>
+<input type="text" id="marks10" placeholder="in Percentage">
+</div>
+
+<!-- SKILLS -->
+
+<div class="input-group">
+<label style="font-size: 20px;">Skills</label>
+
+<div class="chips">
+<div class="chip" onclick="toggleChip(this,'skills')">Python</div>
+<div class="chip" onclick="toggleChip(this,'skills')">Java</div>
+<div class="chip" onclick="toggleChip(this,'skills')">C++</div>
+<div class="chip" onclick="toggleChip(this,'skills')">HTML</div>
+<div class="chip" onclick="toggleChip(this,'skills')">CSS</div>
+<div class="chip" onclick="toggleChip(this,'skills')">JavaScript</div>
+<div class="chip" onclick="toggleChip(this,'skills')">React</div>
+<div class="chip" onclick="toggleChip(this,'skills')">SQL</div>
+<div class="chip" onclick="toggleChip(this,'skills')">Machine Learning</div>
+</div>
+
+<input style="margin-top: 20px;" type="text" id="customSkill" placeholder="Add Custom Skill">
+
+<button type="button"
+onclick="addCustom('skills','customSkill')">
+Add Skill
+</button>
+
+</div>
+
+<!-- STRENGTHS -->
+
+<div class="input-group">
+<label style="font-size: 20px;">Strengths</label>
+
+<div class="chips">
+<div class="chip" onclick="toggleChip(this,'strengths')">Leadership</div>
+<div class="chip" onclick="toggleChip(this,'strengths')">Communication</div>
+<div class="chip" onclick="toggleChip(this,'strengths')">Teamwork</div>
+<div class="chip" onclick="toggleChip(this,'strengths')">Problem Solving</div>
+<div class="chip" onclick="toggleChip(this,'strengths')">Creativity</div>
+</div>
+
+<input  style="margin-top: 20px;" type="text" id="customStrength" placeholder="Add Custom Strength">
+
+<button type="button"
+onclick="addCustom('strengths','customStrength')">
+Add Strength
+</button>
+
+</div>
+
+<!-- HOBBIES -->
+
+<div class="input-group">
+<label style="font-size: 20px;">Hobbies</label>
+
+<div class="chips">
+<div class="chip" onclick="toggleChip(this,'hobbies')">Reading</div>
+<div class="chip" onclick="toggleChip(this,'hobbies')">Gaming</div>
+<div class="chip" onclick="toggleChip(this,'hobbies')">Music</div>
+<div class="chip" onclick="toggleChip(this,'hobbies')">Travel</div>
+<div class="chip" onclick="toggleChip(this,'hobbies')">Photography</div>
+</div>
+
+<input  style="margin-top: 20px;" type="text" id="customHobby" placeholder="Add Custom Hobby">
+
+<button type="button"
+onclick="addCustom('hobbies','customHobby')">
+Add Hobby
+</button>
+
+</div>
+
+<!-- LANGUAGES -->
+
+<div class="input-group">
+<label style="font-size: 20px;">Languages</label>
+
+<div class="chips">
+<div class="chip" onclick="toggleChip(this,'languages')">English</div>
+<div class="chip" onclick="toggleChip(this,'languages')">Telugu</div>
+<div class="chip" onclick="toggleChip(this,'languages')">Hindi</div>
+<div class="chip" onclick="toggleChip(this,'languages')">Tamil</div>
+</div>
+
+<input  style="margin-top: 20px;" type="text" id="customLanguage" placeholder="Add Custom Language">
+
+<button type="button"
+onclick="addCustom('languages','customLanguage')">
+Add Language
+</button>
+
+</div>
+
+<!-- PROJECTS -->
+
+<div class="input-group">
+<label>Project 1</label>
+<input type="text" id="project1" placeholder="Project title">
+</div>
+
+<div class="input-group">
+<label>Project 1 Description</label>
+<textarea id="project1desc" placeholder="About the project"></textarea>
+</div>
+
+<div class="input-group">
+<label>Project 2(optinal)</label>
+<input type="text" id="project2">
+</div>
+
+<div class="input-group">
+<label>Project 2 Description</label>
+<textarea id="project2desc"></textarea>
+</div>
+
+<!-- INTERNSHIPS -->
+
+<div class="input-group">
+<label>Internship / Work Experience</label>
+<textarea id="internship"></textarea>
+</div>
+<!-- CERTIFICATIONS -->
+
+<div class="input-group">
+<label>Certifications</label>
+<textarea id="certifications"></textarea>
+</div>
+
+<!-- EXTRA -->
+
+<div class="input-group">
+<label>Achievements</label>
+<textarea id="achievements"></textarea>
+</div>
+
+<div class="input-group">
+<label>Declaration</label>
+<textarea id="declaration">
+I hereby declare that the information above is true to my knowledge.
+</textarea>
+</div>
+
+<div class="input-group">
+<label>Resume Template</label>
+
+<select id="template">
+<option value="template1">Classic</option>
+<option value="template2">Modern</option>
+<option value="template3">Professional</option>
+</select>
+</div>
+
+<button class="generate-btn" onclick="generateResume()">
+Generate Resume
+</button>
+
+<button class="download-btn" onclick="downloadPDF()">
+Download PDF
+</button>
+
+ </div>
+
+<!-- PREVIEW -->
+
+ <div class="preview">
+
+ <div id="resume">
+
+ <h1>Resume Preview</h1>
+
+ </div>
+ <div style="
+position: fixed;
+top: 20px;
+right: 50px;
+z-index: 9999;
+">
+
+    <button 
+    style="
+    height: 45px;
+    padding: 0 25px;
+    background: linear-gradient(45deg,#24fe41,#fdfc47);
+    border: black 2px solid;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(36,254,65,0.5);
+    "
+    onclick="goHome()">
+
+    HOME
+
+    </button>
+
+</div>
+</div>
+<script>
+const token = localStorage.getItem("token");
+
+if(!token){
+
+    alert("Please Login First");
+
+    window.location.href = "/loginpage";
+}
+
+let data = {
+skills:[],
+strengths:[],
+hobbies:[],
+languages:[]
+};
+
+function addCustom(group,inputId){
+
+    const input = document.getElementById(inputId);
+
+    const value = input.value.trim();
+
+    if(value === "") return;
+
+    data[group].push(value);
+
+    const container = input.previousElementSibling;
+
+    container.innerHTML += `
+        <div class="chip selected">
+            ${value}
+        </div>
+    `;
+
+    input.value = "";
+}
+
+function toggleChip(el,group){
+
+    const value = el.innerText;
+
+    el.classList.toggle("selected");
+
+    if(el.classList.contains("selected")){
+        data[group].push(value);
+    }
+    else{
+        data[group] = data[group].filter(v => v !== value);
+    }
+}
+
+function generateResume(){
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const location = document.getElementById("location").value;
+    const linkedin = document.getElementById("linkedin").value;
+    const github = document.getElementById("github").value;
+    const gender = document.getElementById("gender").value;
+    const role = document.getElementById("role").value;
+    const summary = document.getElementById("summary").value;
+
+    const degree = document.getElementById("degree").value;
+    const college = document.getElementById("college").value;
+    const branch = document.getElementById("branch").value;
+    const gradyear = document.getElementById("gradyear").value;
+    const cgpa = document.getElementById("cgpa").value;
+
+    const school12 = document.getElementById("school12").value;
+    const marks12 = document.getElementById("marks12").value;
+
+    const school10 = document.getElementById("school10").value;
+    const marks10 = document.getElementById("marks10").value;
+
+    const project1 = document.getElementById("project1").value;
+    const project1desc = document.getElementById("project1desc").value;
+
+    const project2 = document.getElementById("project2").value;
+    const project2desc = document.getElementById("project2desc").value;
+
+    const certifications = document.getElementById("certifications").value;
+    const achievements = document.getElementById("achievements").value;
+    const declaration = document.getElementById("declaration").value;
+
+    const template = document.getElementById("template").value;
+
+    let resumeHTML = "";
+
+    // TEMPLATE 1
+
+    if(template === "template1"){
+
+        resumeHTML = `
+
+        <div style="text-align:center;margin-bottom:30px;">
+            <h1 style="font-size:40px;color:#111827;">${name}</h1>
+            <h3 style="color:#f59e0b;">${role}</h3>
+
+            <p>${email} | ${phone}</p>
+            <p>${location}</p>
+
+            <p>
+                LinkedIn: ${linkedin} |
+                GitHub: ${github}
+            </p>
+        </div>
+
+        <div class="section">
+    <h2>Professional Summary</h2>
+    <p>${summary}</p>
+</div>
+
+<div class="section">
+    <h2>Education</h2>
+
+    <p><b>${degree}</b> - ${branch}</p>
+    <p>${college}</p>
+    <p>${gradyear} | ${cgpa}</p>
+
+    <br>
+
+    <p><b>12th</b> - ${school12}</p>
+    <p>${marks12}</p>
+
+    <br>
+
+    <p><b>10th</b> - ${school10}</p>
+    <p>${marks10}</p>
+</div>
+
+<div class="section">
+    <h2>Skills</h2>
+
+    <div class="skills">
+        ${data.skills.map(skill =>
+            `<div class="skill">${skill}</div>`
+        ).join("")}
+    </div>
+</div>
+
+<div class="section">
+    <h2>Strengths</h2>
+
+    <div class="skills">
+        ${data.strengths.map(skill =>
+            `<div class="skill">${skill}</div>`
+        ).join("")}
+    </div>
+</div>
+
+<div class="section">
+    <h2>Hobbies</h2>
+
+    <div class="skills">
+        ${data.hobbies.map(skill =>
+            `<div class="skill">${skill}</div>`
+        ).join("")}
+    </div>
+</div>
+
+<div class="section">
+    <h2>Languages</h2>
+
+    <div class="skills">
+        ${data.languages.map(skill =>
+            `<div class="skill">${skill}</div>`
+        ).join("")}
+    </div>
+</div>
+
+<div class="section">
+    <h2>Projects</h2>
+
+    <p><b>${project1}</b></p>
+    <p>${project1desc}</p>
+
+    <br>
+
+    <p><b>${project2}</b></p>
+    <p>${project2desc}</p>
+</div>
+
+<div class="section">
+    <h2>Certifications</h2>
+    <p>${certifications.replace(/\n/g,"<br>")}</p>
+</div>
+
+<div class="section">
+    <h2>Achievements</h2>
+    <p>${achievements.replace(/\n/g,"<br>")}</p>
+</div>
+
+<div class="section">
+    <h2>Links</h2>
+    <p>LinkedIn: ${linkedin}</p>
+    <p>GitHub: ${github}</p>
+    <p>Gender: ${gender}</p>
+</div>
+
+<div class="section">
+    <h2>Declaration</h2>
+    <p>${declaration}</p>
+</div>
+
+        `;
+    }
+
+    // TEMPLATE 2
+
+    else if(template === "template2"){
+
+        resumeHTML = `
+
+        <div style="display:flex;">
+
+            <div style="
+                width:30%;
+                background:#111827;
+                color:white;
+                padding:25px;
+                border-radius:10px 0 0 10px;
+            ">
+
+                <h1 style="font-size:34px;">${name}</h1>
+
+                <hr style="margin:20px 0;">
+
+                <h3 style="color:#fbbf24;">CONTACT</h3>
+
+                <p>${email}</p>
+                <p>${phone}</p>
+                <p>${location}</p>
+
+                <br>
+
+                <h3 style="color:#fbbf24;">LINKS</h3>
+
+                <p>${linkedin}</p>
+                <p>${github}</p>
+
+                <br>
+
+                <h3 style="color:#fbbf24;">SKILLS</h3>
+
+                ${data.skills.map(skill =>
+                    `<p>• ${skill}</p>`
+                ).join("")}
+
+                <br>
+
+                <h3 style="color:#fbbf24;">LANGUAGES</h3>
+
+                ${data.languages.map(skill =>
+                    `<p>• ${skill}</p>`
+                ).join("")}
+
+            </div>
+
+            <div style="
+                width:70%;
+                padding:30px;
+            ">
+
+                <h2 style="font-size:28px;">${role}</h2>
+
+                <div class="section">
+                    <h2>Professional Summary</h2>
+                    <p>${summary}</p>
+                </div>
+
+                <div class="section">
+                    <h2>Education</h2>
+
+                    <p><b>${degree}</b> - ${branch}</p>
+                    <p>${college}</p>
+                    <p>${gradyear} | ${cgpa}</p>
+
+                    <br>
+
+                    <p><b>12th</b> - ${school12}</p>
+                    <p>${marks12}</p>
+
+                    <br>
+
+                    <p><b>10th</b> - ${school10}</p>
+                    <p>${marks10}</p>
+                </div>
+
+                <div class="section">
+                    <h2>Projects</h2>
+
+                    <p><b>${project1}</b></p>
+                    <p>${project1desc}</p>
+
+                    <br>
+
+                    <p><b>${project2}</b></p>
+                    <p>${project2desc}</p>
+                </div>
+
+                <div class="section">
+                    <h2>Achievements</h2>
+                    <p>${achievements.replace(/\n/g,"<br>")}</p>
+                </div>
+
+                <div class="section">
+                    <h2>Certifications</h2>
+                    <p>${certifications.replace(/\n/g,"<br>")}</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+    }
+
+    // TEMPLATE 3
+
+    else{
+
+        resumeHTML = `
+
+        <div style="
+            background:linear-gradient(135deg,#2563eb,#7c3aed);
+            color:white;
+            padding:40px;
+            border-radius:12px;
+            margin-bottom:25px;
+        ">
+
+            <h1 style="font-size:42px;">${name}</h1>
+
+            <h2 style="margin-top:10px;">
+                ${role}
+            </h2>
+
+            <p style="margin-top:15px;">
+                ${email} | ${phone}
+            </p>
+
+            <p>${location}</p>
+
+        </div>
+
+        <div class="section">
+            <h2>Professional Summary</h2>
+            <p>${summary}</p>
+        </div>
+
+        <div style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+        ">
+
+            <div class="section">
+                <h2>Education</h2>
+
+                <p><b>${degree}</b></p>
+                <p>${branch}</p>
+                <p>${college}</p>
+                <p>${gradyear}</p>
+                <p>${cgpa}</p>
+
+                <br>
+
+                <p><b>12th</b></p>
+                <p>${school12}</p>
+                <p>${marks12}</p>
+
+                <br>
+
+                <p><b>10th</b></p>
+                <p>${school10}</p>
+                <p>${marks10}</p>
+            </div>
+
+            <div class="section">
+                <h2>Skills</h2>
+
+                <div class="skills">
+                    ${data.skills.map(skill =>
+                        `<div class="skill">${skill}</div>`
+                    ).join("")}
+                </div>
+
+                <br>
+
+                <h2>Strengths</h2>
+
+                <div class="skills">
+                    ${data.strengths.map(skill =>
+                        `<div class="skill">${skill}</div>`
+                    ).join("")}
+                </div>
+
+                <br>
+
+                <h2>Languages</h2>
+
+                <div class="skills">
+                    ${data.languages.map(skill =>
+                        `<div class="skill">${skill}</div>`
+                    ).join("")}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="section">
+            <h2>Projects</h2>
+
+            <p><b>${project1}</b></p>
+            <p>${project1desc}</p>
+
+            <br>
+
+            <p><b>${project2}</b></p>
+            <p>${project2desc}</p>
+        </div>
+
+        <div class="section">
+            <h2>Hobbies</h2>
+
+            <div class="skills">
+                ${data.hobbies.map(skill =>
+                    `<div class="skill">${skill}</div>`
+                ).join("")}
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Achievements</h2>
+            <p>${achievements.replace(/\n/g,"<br>")}</p>
+        </div>
+
+        <div class="section">
+            <h2>Certifications</h2>
+            <p>${certifications.replace(/\n/g,"<br>")}</p>
+        </div>
+
+        <div class="section">
+            <h2>Links</h2>
+
+            <p>LinkedIn: ${linkedin}</p>
+            <p>GitHub: ${github}</p>
+            <p>Gender: ${gender}</p>
+        </div>
+
+        <div class="section">
+            <h2>Declaration</h2>
+            <p>${declaration}</p>
+        </div>
+
+        `;
+    }
+
+    document.getElementById("resume").innerHTML = resumeHTML;
+}
+
+function commonSections(){
+
+    return `
+
+    <div class="section">
+        <h2>Professional Summary</h2>
+        <p>${summary}</p>
+    </div>
+
+    <div class="section">
+        <h2>Education</h2>
+
+        <p><b>${degree}</b> - ${branch}</p>
+        <p>${college}</p>
+        <p>${gradyear} | ${cgpa}</p>
+
+        <br>
+
+        <p><b>12th</b> - ${school12}</p>
+        <p>${marks12}</p>
+
+        <br>
+
+        <p><b>10th</b> - ${school10}</p>
+        <p>${marks10}</p>
+    </div>
+
+    <div class="section">
+        <h2>Skills</h2>
+
+        <div class="skills">
+            ${data.skills.map(skill =>
+                `<div class="skill">${skill}</div>`
+            ).join("")}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Strengths</h2>
+
+        <div class="skills">
+            ${data.strengths.map(skill =>
+                `<div class="skill">${skill}</div>`
+            ).join("")}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Hobbies</h2>
+
+        <div class="skills">
+            ${data.hobbies.map(skill =>
+                `<div class="skill">${skill}</div>`
+            ).join("")}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Languages</h2>
+
+        <div class="skills">
+            ${data.languages.map(skill =>
+                `<div class="skill">${skill}</div>`
+            ).join("")}
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Projects</h2>
+
+        <p><b>${project1}</b></p>
+        <p>${project1desc}</p>
+
+        <br>
+
+        <p><b>${project2}</b></p>
+        <p>${project2desc}</p>
+    </div>
+
+    <div class="section">
+        <h2>Certifications</h2>
+        <p>${certifications.replace(/\n/g,"<br>")}</p>
+    </div>
+
+    <div class="section">
+        <h2>Achievements</h2>
+        <p>${achievements.replace(/\n/g,"<br>")}</p>
+    </div>
+
+    <div class="section">
+        <h2>Declaration</h2>
+        <p>${declaration}</p>
+    </div>
+
+    `;
+}
+
+function downloadPDF(){
+
+    const element = document.getElementById("resume");
+
+    html2pdf().from(element).save();
+}
+function goHome(){
+
+    window.location.href = "/";
+}
+setTimeout(()=>{
+
+    document.getElementById("miniIntro").remove();
+
+},3000);
+</script>
+
+</body>
+</html>
