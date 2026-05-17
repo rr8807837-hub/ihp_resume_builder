@@ -238,24 +238,23 @@ document
 
     // SEND DATA TO BACKEND
 
-    const response = await fetch(
-    "http://127.0.0.1:5000/login",{
+    const response = await fetch("/login",{
 
-        method:"POST",
+    method:"POST",
 
-        headers:{
-            "Content-Type":"application/json"
-        },
+ headers:{
+    "Content-Type":"application/json"
+ },
 
-        body:JSON.stringify({
+  body:JSON.stringify({
 
-            username:username,
-            email:email,
-            password:password
+    username:username,
+    email:email,
+    password:password
 
-        })
+   })
 
-    });
+});
 
     const data = await response.json();
 
