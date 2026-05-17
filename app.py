@@ -204,7 +204,7 @@ Return format:
     try:
         # ✅ NEW SDK CALL
         response = client_ai.models.generate_content(
-            model="gemini-2.0-flash-lite",
+            model="gemini-3.1-flash-lite",
             contents=prompt
         )
 
@@ -248,7 +248,7 @@ Resume:
 """
 
         response = client_ai.models.generate_content(
-            model="gemini-2.0-flash-lite",
+            model="gemini-3.1-flash-lite",
             contents=prompt
         )
 
