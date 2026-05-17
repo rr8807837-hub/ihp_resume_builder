@@ -204,7 +204,7 @@ Return format:
     try:
         # ✅ NEW SDK CALL
         response = client_ai.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-2.0-flash-lite",
             contents=prompt
         )
 
@@ -241,21 +241,14 @@ def generate_interview_questions():
 You are an interview expert.
 Generate  10 short one line interview questions
 based on this resume.
-Mix:
-- HR
-- Technical
-- Project
-
 Return ONLY plain text.
-
 One question per line.
-
 Resume:
 {resume_text}
 """
 
         response = client_ai.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-2.0-flash-lite",
             contents=prompt
         )
 
